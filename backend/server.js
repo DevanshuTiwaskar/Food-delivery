@@ -15,9 +15,10 @@ const port = process.env.PORT || 4000;
 // middlewares
 app.use(express.json())
 app.use(cors({
-  origin: "http://localhost:5173", // or 3001 if your React dev server runs there
-  credentials: true
+  origin: ["http://localhost:5173", "http://localhost:5174"], // allowed frontend origins
+  credentials: true // allows cookies, authorization headers, etc.
 }));
+
 
 
 // db connection

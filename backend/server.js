@@ -15,8 +15,9 @@ const port = process.env.PORT || 4000;
 // middlewares
 app.use(express.json())
 app.use(cors({
-  origin: ["food-delivery-one-tau.vercel.app", "http://localhost:5174"], // allowed frontend origins
-  credentials: true // allows cookies, authorization headers, etc.
+  origin: ["http://localhost:5173", "http://localhost:5174", "https://food-delivery-one-tau.vercel.app"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
 }));
 
 

@@ -1,35 +1,101 @@
-.add{
-    width: 70%;
-    margin-left: max(5vw,25px);
-    margin-top: 50px;
-    color: #6D6D6D;
-    font-size: 16px;
+.add {
+  width: 70%;
+  margin: 50px auto;
+  color: #333;
+  font-size: 16px;
+  font-family: "Segoe UI", sans-serif;
 }
-.add form{
-   gap: 20px;
+
+.add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  background: #fafafa;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
-.add-img-upload img{
-    width: 120px;
+
+/* Upload section */
+.add-img-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
-.add-product-name, .add-product-description{
-    width: max(40%,280px);
+.image-upload-label {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
 }
-.add-product-name input ,.add-product-description textarea{
-    padding: 10px 10px;
+.preview-img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px dashed #ccc;
+  transition: border 0.3s;
 }
-.add-category-price{
-    display: flex;
-    gap: 30px;
+.preview-img:hover {
+  border-color: #555;
 }
-.add-category-price select,.add-category-price input{
-    max-width: 120px;
-    padding: 10px;
+.upload-text {
+  font-size: 14px;
+  color: #666;
 }
-.add-btn{
-    max-width: 120px;
-    border: none;
-    padding: 10px;
-    background-color: black;
-    color: white;
-    cursor: pointer;
+
+/* Inputs */
+.add-product-name,
+.add-product-description,
+.add-category,
+.add-price {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.add-product-name input,
+.add-product-description textarea,
+.add-category select,
+.add-price input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  transition: 0.3s;
+  font-size: 15px;
+}
+.add-product-name input:focus,
+.add-product-description textarea:focus,
+.add-category select:focus,
+.add-price input:focus {
+  border-color: #000;
+}
+
+/* Flex row for category & price */
+.add-category-price {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+/* Button */
+.add-btn {
+  max-width: 180px;
+  border: none;
+  padding: 12px;
+  background: #000;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.add-btn:hover:not(:disabled) {
+  background: #333;
+}
+.add-btn:disabled {
+  background: #999;
+  cursor: not-allowed;
 }

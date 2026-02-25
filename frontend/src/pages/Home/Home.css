@@ -1,0 +1,38 @@
+/* Home Component Styles */
+.home {
+  /* Add top padding to account for fixed navbar */
+  margin-top:  1rem;
+  padding-top: 74px; /* Navbar height on desktop */
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Mobile responsive padding */
+@media (max-width: 767px) {
+  .home {
+    padding-top: 60px; /* Navbar height on mobile */
+  }
+}
+
+/* Smooth scroll behavior for sections */
+.home section {
+  scroll-margin-top: 80px; /* Offset for fixed navbar when scrolling to sections */
+}
+
+/* Optional: Add smooth transitions */
+.home {
+  transition: padding-top 0.3s ease;
+}
+
+/* If your Header component has a background image/hero section */
+.home .header {
+  /* Ensure header content is properly positioned */
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure proper spacing between sections */
+.home > * {
+  position: relative;
+  z-index: 1;
+}

@@ -4,66 +4,84 @@ import api from "../api/client"; // axios instance
 
 export const StoreContext = createContext(null);
 
-const StoreContextProvider = ({children}) => {
+const StoreContextProvider = ({ children }) => {
   const [food_list, setFoodList] = useState([]);
   const [cartItems, setCartItems] = useState({});
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
+  const [userData, setUserData] = useState(() => {
+    const saved = localStorage.getItem("userData");
+    return saved ? JSON.parse(saved) : null;
+  });
 
   // -------------------------------
   // CART FUNCTIONS
   // -------------------------------
   const addToCart = async (itemId) => {
-    // optimistic update
-    setCartItems((prev) => ({
-      ...prev,
-      [itemId]: (prev[itemId] || 0) + 1,
-    }));
+    setCartItems((prev) => {
+      const updated = { ...prev, [itemId]: (prev[itemId] || 0) + 1 };
+      localStorage.setItem("cart", JSON.stringify(updated));
+      return updated;
+    });
 
     if (token) {
       try {
-        await api.post("/api/cart/add", { itemId }, { headers: { token } });
+        await api.post(
+          "/api/cart/add",
+          { itemId },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
       } catch (err) {
         console.error("Failed to sync addToCart:", err);
-        // rollback if API failed
-        setCartItems((prev) => ({
-          ...prev,
-          [itemId]: prev[itemId] - 1,
-        }));
+        // rollback
+        setCartItems((prev) => {
+          const rollback = { ...prev, [itemId]: prev[itemId] - 1 };
+          if (rollback[itemId] <= 0) delete rollback[itemId];
+          localStorage.setItem("cart", JSON.stringify(rollback));
+          return rollback;
+        });
       }
     }
   };
 
   const removeFromCart = async (itemId) => {
-    // optimistic update
     setCartItems((prev) => {
-      const newCount = (prev[itemId] || 1) - 1;
-      return {
-        ...prev,
-        [itemId]: newCount > 0 ? newCount : 0,
-      };
+      const newCount = (prev[itemId] || 0) - 1;
+      const updated = { ...prev };
+      if (newCount > 0) {
+        updated[itemId] = newCount;
+      } else {
+        delete updated[itemId];
+      }
+      localStorage.setItem("cart", JSON.stringify(updated));
+      return updated;
     });
 
     if (token) {
       try {
-        await api.post("/api/cart/remove", { itemId }, { headers: { token } });
+        await api.post(
+          "/api/cart/remove",
+          { itemId },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
       } catch (err) {
         console.error("Failed to sync removeFromCart:", err);
-        // rollback if API failed
-        setCartItems((prev) => ({
-          ...prev,
-          [itemId]: (prev[itemId] || 0) + 1,
-        }));
+        // rollback
+        setCartItems((prev) => {
+          const rollback = { ...prev, [itemId]: (prev[itemId] || 0) + 1 };
+          localStorage.setItem("cart", JSON.stringify(rollback));
+          return rollback;
+        });
       }
     }
   };
 
   const getTotalCartAmount = () => {
     let totalAmount = 0;
-    for (const item in cartItems) {
-      if (cartItems[item] > 0) {
-        let itemInfo = food_list.find((product) => product._id === item);
+    for (const itemId in cartItems) {
+      if (cartItems[itemId] > 0) {
+        const itemInfo = food_list.find((product) => product._id === itemId);
         if (itemInfo) {
-          totalAmount += itemInfo.price * cartItems[item];
+          totalAmount += itemInfo.price * cartItems[itemId];
         }
       }
     }
@@ -82,12 +100,12 @@ const StoreContextProvider = ({children}) => {
     }
   };
 
-  const loadCartData = async (token) => {
+  const loadCartData = async (authToken) => {
     try {
       const response = await api.post(
         "/api/cart/get",
         {},
-        { headers: { token } }
+        { headers: { Authorization: `Bearer ${authToken}` } }
       );
       setCartItems(response.data?.cartData || {});
     } catch (err) {
@@ -96,19 +114,40 @@ const StoreContextProvider = ({children}) => {
   };
 
   // -------------------------------
-  // INIT APP
+  // EFFECTS
   // -------------------------------
   useEffect(() => {
-    async function loadData() {
-      await fetchFoodList();
-      const savedToken = localStorage.getItem("token");
-      if (savedToken) {
-        setToken(savedToken);
-        await loadCartData(savedToken);
-      }
+    fetchFoodList();
+
+    // load local cart (for guest users)
+    const localCart = localStorage.getItem("cart");
+    if (localCart) {
+      setCartItems(JSON.parse(localCart));
     }
-    loadData();
-  }, []);
+
+    // load server cart if token exists
+    if (token) {
+      loadCartData(token);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem("token", token);
+    } else {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userData");
+      setUserData(null);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (userData) {
+      localStorage.setItem("userData", JSON.stringify(userData));
+    } else {
+      localStorage.removeItem("userData");
+    }
+  }, [userData]);
 
   // -------------------------------
   // CONTEXT VALUE
@@ -122,6 +161,8 @@ const StoreContextProvider = ({children}) => {
     getTotalCartAmount,
     token,
     setToken,
+    userData,
+    setUserData,
     loadCartData,
     setCartItems,
   };

@@ -21,12 +21,7 @@ export const assets ={
 // export const url = 'https://food-delivery-s3fj.onrender.com'
 import axios from "axios";
 
-// Change baseURL depending on environment
-const baseURL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:3000" // local backend
-    : "https://food-delivery-s3fj.onrender.com"; // deployed backend
-
+const baseURL = "http://localhost:4000";
 const api = axios.create({
   baseURL,
   withCredentials: true,

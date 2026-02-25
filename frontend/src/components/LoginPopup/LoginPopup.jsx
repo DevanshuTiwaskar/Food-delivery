@@ -1,51 +1,82 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "./LoginPopup.css";
 import { assets } from "../../assets/assets";
 import { StoreContext } from "../../Context/StoreContext";
-import api from "../../api/client"; // ✅ use axios instance
+import api from "../../api/client";
 import { toast } from "react-toastify";
 
 const LoginPopup = ({ setShowLogin }) => {
-  const { setToken, loadCartData } = useContext(StoreContext);
-  const [currState, setCurrState] = useState("Sign Up");
+  const { setToken, setUserData, loadCartData } = useContext(StoreContext);
 
+  const [currState, setCurrState] = useState("Login");
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     name: "",
     email: "",
     password: "",
   });
 
+  // Handle escape key to close popup
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === "Escape") setShowLogin(false);
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [setShowLogin]);
+
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
     setData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const validateForm = () => {
+    if (currState === "Sign Up" && data.name.trim().length < 2) {
+      toast.error("Name must be at least 2 characters long.");
+      return false;
+    }
+    if (!/\S+@\S+\.\S+/.test(data.email)) {
+      toast.error("Please enter a valid email address.");
+      return false;
+    }
+    if (data.password.length < 6) {
+      toast.error("Password must be at least 6 characters long.");
+      return false;
+    }
+    return true;
+  };
+
   const onLogin = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
 
+    setLoading(true);
     try {
-      let endpoint = "/api/user/register";
-      if (currState === "Login") {
-        endpoint = "/api/user/login";
-      }
-
+      const endpoint = currState === "Login" ? "/api/user/login" : "/api/user/register";
       const response = await api.post(endpoint, data);
 
       if (response.data.success) {
         const token = response.data.token;
+        const user = response.data.user;
         setToken(token);
+        setUserData(user); // Set the full user profile
         localStorage.setItem("token", token);
+        localStorage.setItem("userData", JSON.stringify(user));
+
         await loadCartData({ token });
         setShowLogin(false);
         toast.success(
-          currState === "Login" ? "Logged in successfully" : "Account created!"
+          currState === "Login" ? "Welcome back!" : "Account created successfully!"
         );
       } else {
-        toast.error(response.data.message);
+        toast.error(response.data.message || "Authentication failed.");
       }
     } catch (error) {
-      console.error("Login/Register error:", error);
-      toast.error("Something went wrong. Please try again.");
+      console.error("Auth error:", error);
+      const msg = error.response?.data?.message || "Connection error. Please try again.";
+      toast.error(msg);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -57,54 +88,68 @@ const LoginPopup = ({ setShowLogin }) => {
           <img
             onClick={() => setShowLogin(false)}
             src={assets.cross_icon}
-            alt="close"
+            alt="Close"
+            title="Close"
           />
         </div>
 
         <div className="login-popup-inputs">
           {currState === "Sign Up" && (
-            <input
-              name="name"
-              onChange={onChangeHandler}
-              value={data.name}
-              type="text"
-              placeholder="Your name"
-              required
-            />
+            <div className="input-group">
+              <input
+                name="name"
+                onChange={onChangeHandler}
+                value={data.name}
+                type="text"
+                placeholder="Full Name"
+                required
+                autoComplete="name"
+              />
+            </div>
           )}
-          <input
-            name="email"
-            onChange={onChangeHandler}
-            value={data.email}
-            type="email"
-            placeholder="Your email"
-            required
-          />
-          <input
-            name="password"
-            onChange={onChangeHandler}
-            value={data.password}
-            type="password"
-            placeholder="Password"
-            required
-          />
+          <div className="input-group">
+            <input
+              name="email"
+              onChange={onChangeHandler}
+              value={data.email}
+              type="email"
+              placeholder="Email address"
+              required
+              autoComplete="email"
+            />
+          </div>
+          <div className="input-group">
+            <input
+              name="password"
+              onChange={onChangeHandler}
+              value={data.password}
+              type="password"
+              placeholder="Password"
+              required
+              autoComplete={currState === "Login" ? "current-password" : "new-password"}
+            />
+          </div>
         </div>
 
-        <button type="submit">
-          {currState === "Login" ? "Login" : "Create account"}
+        <button type="submit" disabled={loading}>
+          {loading ? (
+            <div className="spinner"></div>
+          ) : (
+            currState === "Login" ? "Sign In" : "Create Account"
+          )}
         </button>
 
         <div className="login-popup-condition">
-          <input type="checkbox" required />
+          <input type="checkbox" required defaultChecked />
           <p>
-            By continuing, I agree to the terms of use & privacy policy.
+            By continuing, I agree to the <span>Terms</span> & <span>Privacy Policy</span>.
           </p>
         </div>
 
         {currState === "Login" ? (
           <p>
-            Create a new account?{" "}
-            <span onClick={() => setCurrState("Sign Up")}>Click here</span>
+            New to Cravely?{" "}
+            <span onClick={() => setCurrState("Sign Up")}>Create account</span>
           </p>
         ) : (
           <p>

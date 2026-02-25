@@ -11,7 +11,7 @@ const FoodItem = ({ image, name, price, desc, id }) => {
       <div className='food-item-img-container'>
         <img
           className='food-item-image'
-          src={image}   // ✅ direct ImageKit URL
+          src={image.startsWith("http") ? image : "http://localhost:4000/images/" + image}
           alt={name}
         />
         {!cartItems[id] ? (
@@ -39,7 +39,7 @@ const FoodItem = ({ image, name, price, desc, id }) => {
       </div>
       <div className='food-item-info'>
         <div className='food-item-name-rating'>
-          <p>{name}</p> 
+          <p>{name}</p>
           <img src={assets.rating_starts} alt='Rating stars' />
         </div>
         <p className='food-item-desc'>{desc}</p>

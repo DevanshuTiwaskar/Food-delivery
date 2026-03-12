@@ -10,7 +10,8 @@
 /* Mobile responsive padding */
 @media (max-width: 767px) {
   .home {
-    padding-top: 60px; /* Navbar height on mobile */
+    padding-top: 80px; /* Slightly more clearance for absolute mobile navbar */
+    margin-top: 0;
   }
 }
 

@@ -1,6 +1,7 @@
 import Navbar from './components/Navbar/Navbar'
 import Sidebar from './components/Sidebar/Sidebar'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
+import React, { useEffect } from 'react';
 import Dashboard from './pages/Dashboard/Dashboard'
 import Add from './pages/Add/Add'
 import List from './pages/List/List'
@@ -9,6 +10,27 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    switch (location.pathname) {
+      case "/":
+        document.title = "Dashboard - Cravely Admin";
+        break;
+      case "/add":
+        document.title = "Add Item - Cravely Admin";
+        break;
+      case "/list":
+        document.title = "Food List - Cravely Admin";
+        break;
+      case "/orders":
+        document.title = "Orders - Cravely Admin";
+        break;
+      default:
+        document.title = "Cravely Admin";
+    }
+  }, [location]);
+
   return (
     <div className='app'>
       <ToastContainer />

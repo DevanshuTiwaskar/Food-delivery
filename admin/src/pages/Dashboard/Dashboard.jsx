@@ -19,8 +19,8 @@ const Dashboard = ({ url }) => {
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Use the provided url or fallback to localhost
-  const API_URL = url || "http://localhost:4000";
+  // Use the provided url or dynamically detect the environment
+  const API_URL = url || (import.meta.env.DEV ? "http://localhost:4000" : "https://food-delivery-1-8uo5.onrender.com");
 
   const fetchAnalytics = async () => {
     try {

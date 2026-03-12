@@ -2,6 +2,7 @@ import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import Stripe from "stripe";
 import sendOrderConfirmationEmail from "../utils/emailService.js";
+import { io } from "../server.js";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // config variables
@@ -92,9 +93,20 @@ const updateStatus = async (req, res) => {
   console.log(req.body);
   try {
     // Update order status (e.g., "Pending" -> "Delivered")
-    await orderModel.findByIdAndUpdate(req.body.orderId, {
-      status: req.body.status,
-    });
+    const updatedOrder = await orderModel.findByIdAndUpdate(
+      req.body.orderId,
+      { status: req.body.status },
+      { new: true } // Return the updated document
+    );
+
+    // Emit a socket event with the new status to connected clients
+    if (updatedOrder) {
+      io.emit("order-status-update", {
+        orderId: updatedOrder._id,
+        status: updatedOrder.status,
+      });
+    }
+
     res.json({ success: true, message: "Status Updated" });
   } catch (error) {
     res.json({ success: false, message: "Error" });

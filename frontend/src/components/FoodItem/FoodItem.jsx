@@ -4,46 +4,51 @@ import { assets } from '../../assets/assets'
 import { StoreContext } from '../../Context/StoreContext'
 
 const FoodItem = ({ image, name, price, desc, id }) => {
-  const { cartItems, addToCart, removeFromCart } = useContext(StoreContext)
+  const { cartItems, addToCart, removeFromCart, url } = useContext(StoreContext)
 
   return (
-    <div className='food-item'>
-      <div className='food-item-img-container'>
+    <div className='food-item-card'>
+      <div className='food-item-img-box'>
         <img
-          className='food-item-image'
-          src={image.startsWith("http") ? image : "http://localhost:4000/images/" + image}
+          className='food-item-main-img'
+          src={image.startsWith("http") ? image : url + "/images/" + image}
           alt={name}
+          loading='lazy'
         />
-        {!cartItems[id] ? (
-          <img
-            className='add'
-            onClick={() => addToCart(id)}
-            src={assets.add_icon_white}
-            alt='Add'
-          />
-        ) : (
-          <div className='food-item-counter'>
-            <img
-              src={assets.remove_icon_red}
-              onClick={() => removeFromCart(id)}
-              alt='Remove'
-            />
-            <p>{cartItems[id]}</p>
-            <img
-              src={assets.add_icon_green}
-              onClick={() => addToCart(id)}
-              alt='Add'
-            />
-          </div>
-        )}
-      </div>
-      <div className='food-item-info'>
-        <div className='food-item-name-rating'>
-          <p>{name}</p>
-          <img src={assets.rating_starts} alt='Rating stars' />
+
+        {/* Price Badge */}
+        <div className="food-item-price-badge">
+          ₹{price}
         </div>
-        <p className='food-item-desc'>{desc}</p>
-        <p className='food-item-price'>${price}</p>
+
+        {/* Counter Overlay */}
+        <div className="food-item-controls">
+          {!cartItems[id] ? (
+            <button className="add-btn-floating" onClick={() => addToCart(id)}>
+              <img src={assets.add_icon_white} alt='Add' />
+            </button>
+          ) : (
+            <div className='food-item-counter-glass'>
+              <button onClick={() => removeFromCart(id)}>
+                <img src={assets.remove_icon_red} alt='Remove' />
+              </button>
+              <span>{cartItems[id]}</span>
+              <button onClick={() => addToCart(id)}>
+                <img src={assets.add_icon_green} alt='Add' />
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className='food-item-details'>
+        <div className='food-item-header'>
+          <h3>{name}</h3>
+          <div className='rating-stars'>
+            <img src={assets.rating_starts} alt='Rating stars' />
+          </div>
+        </div>
+        <p className='food-item-description'>{desc}</p>
       </div>
     </div>
   )

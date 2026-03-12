@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -17,6 +17,29 @@ import Navbar from './components/Navbar/Navbar';
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    switch (location.pathname) {
+      case '/':
+        document.title = 'Home - Cravely';
+        break;
+      case '/cart':
+        document.title = 'Cart - Cravely';
+        break;
+      case '/order':
+        document.title = 'Place Order - Cravely';
+        break;
+      case '/myorders':
+        document.title = 'My Orders - Cravely';
+        break;
+      case '/verify':
+        document.title = 'Verify Order - Cravely';
+        break;
+      default:
+        document.title = 'Cravely';
+    }
+  }, [location.pathname]);
 
   return (
     <>

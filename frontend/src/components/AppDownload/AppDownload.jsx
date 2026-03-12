@@ -3,7 +3,7 @@ import { assets } from "../../assets/assets";
 
 const AppDownload = () => {
   return (
-    <div className="app-download" id="app-download">
+    <div className="app-download" id="about">
       <p>
         For Better Experience Download <br />
         Cravely App

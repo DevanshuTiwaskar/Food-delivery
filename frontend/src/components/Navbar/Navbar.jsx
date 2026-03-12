@@ -52,7 +52,7 @@ const Navbar = ({ setShowLogin, setShowAdminLogin }) => {
   }, [menuOpen, showProfileMenu]);
 
   const navLinks = [
-    { id: "home", label: "Home", icon: "🏠", href: "/" },
+    { id: "home", label: "Home", icon: "🏠", href: "/#home" },
     { id: "menu", label: "Menu", icon: "🍽️", href: "/#menu" },
     { id: "about", label: "About", icon: "ℹ️", href: "/#about" },
     { id: "contact", label: "Contact", icon: "📞", href: "/#contact" },
@@ -62,17 +62,27 @@ const Navbar = ({ setShowLogin, setShowAdminLogin }) => {
     setActiveSection(link.id);
     setMenuOpen(false);
 
-    if (link.href.startsWith('/#')) {
-      if (location.pathname !== "/") {
-        navigate("/");
-        setTimeout(() => {
-          document.getElementById(link.id)?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-      } else {
-        document.getElementById(link.id)?.scrollIntoView({ behavior: 'smooth' });
-      }
+    const targetId = link.href.split("#")[1];
+
+    if (location.pathname !== "/") {
+      // If not on home page, navigate to home first then scroll after a delay
+      navigate("/");
+      setTimeout(() => {
+        const element = document.getElementById(targetId);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        } else if (targetId === "home") {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      }, 300); // Increased timeout for better reliability on cross-page navigation
     } else {
-      navigate(link.href);
+      // If already on home page, scroll immediately
+      const element = document.getElementById(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      } else if (targetId === "home") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
     }
   };
 

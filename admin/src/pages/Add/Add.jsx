@@ -53,92 +53,116 @@ const Add = () => {
   };
 
   return (
-    <div className="add">
-      <form className="add-form" onSubmit={onSubmitHandler}>
-        {/* Upload Section */}
-        <div className="add-img-upload flex-col">
-          <p>Upload Image</p>
-          <label htmlFor="image" className="image-upload-label">
-            <img
-              src={!image ? assets.upload_area : URL.createObjectURL(image)}
-              alt="preview"
-              className="preview-img"
-            />
-            <span className="upload-text">
-              {!image ? "Choose File" : "Change"}
-            </span>
-          </label>
-          <input
-            onChange={(e) => setImage(e.target.files[0])}
-            type="file"
-            id="image"
-            accept="image/*"
-            hidden
-          />
-        </div>
+    <div className="add-container">
+      <div className="page-header">
+        <h2 className="heading-xl">Add New Product</h2>
+        <p className="text-secondary">Create a new delicious item for your menu.</p>
+      </div>
 
-        {/* Name */}
-        <div className="add-product-name flex-col">
-          <p>Product Name</p>
-          <input
-            name="name"
-            onChange={onChangeHandler}
-            value={data.name}
-            type="text"
-            placeholder="Type here..."
-            required
-          />
-        </div>
-
-        {/* Description */}
-        <div className="add-product-description flex-col">
-          <p>Product Description</p>
-          <textarea
-            name="description"
-            onChange={onChangeHandler}
-            value={data.description}
-            rows={5}
-            placeholder="Write content here..."
-            required
-          />
-        </div>
-
-        {/* Category + Price */}
-        <div className="add-category-price">
-          <div className="add-category flex-col">
-            <p>Category</p>
-            <select
-              name="category"
-              onChange={onChangeHandler}
-              value={data.category}
-            >
-              <option value="Salad">Salad</option>
-              <option value="Rolls">Rolls</option>
-              <option value="Deserts">Desserts</option>
-              <option value="Sandwich">Sandwich</option>
-              <option value="Cake">Cake</option>
-              <option value="Pure Veg">Pure Veg</option>
-              <option value="Pasta">Pasta</option>
-              <option value="Noodles">Noodles</option>
-            </select>
-          </div>
-          <div className="add-price flex-col">
-            <p>Price (₹)</p>
+      <form className="add-form-card card" onSubmit={onSubmitHandler}>
+        <div className="form-grid">
+          {/* Left Column: Image Upload */}
+          <div className="upload-section">
+            <p className="form-label">Product Image</p>
+            <label htmlFor="image" className="image-dropzone">
+              <img
+                src={!image ? assets.upload_area : URL.createObjectURL(image)}
+                alt="preview"
+                className={!image ? "placeholder-icon" : "uploaded-img"}
+              />
+              <div className="upload-overlay">
+                <span>{image ? "Replace Image" : "Click to Upload"}</span>
+              </div>
+            </label>
             <input
-              type="number"
-              name="price"
-              onChange={onChangeHandler}
-              value={data.price}
-              placeholder="e.g. 250"
-              required
+              onChange={(e) => setImage(e.target.files[0])}
+              type="file"
+              id="image"
+              accept="image/*"
+              hidden
             />
+            <p className="upload-hint">Recommended size: 800x600px. JPG, PNG formats.</p>
+          </div>
+
+          {/* Right Column: Details */}
+          <div className="details-section">
+            <div className="form-field">
+              <label className="form-label">Product Name</label>
+              <input
+                className="form-input"
+                name="name"
+                onChange={onChangeHandler}
+                value={data.name}
+                type="text"
+                placeholder="Ex. Mediterranean Salad"
+                required
+              />
+            </div>
+
+            <div className="form-field">
+              <label className="form-label">Description</label>
+              <textarea
+                className="form-textarea"
+                name="description"
+                onChange={onChangeHandler}
+                value={data.description}
+                rows={4}
+                placeholder="Describe the taste, ingredients, etc."
+                required
+              />
+            </div>
+
+            <div className="form-row">
+              <div className="form-field">
+                <label className="form-label">Category</label>
+                <select
+                  className="form-select"
+                  name="category"
+                  onChange={onChangeHandler}
+                  value={data.category}
+                >
+                  <option value="Salad">Salad</option>
+                  <option value="Rolls">Rolls</option>
+                  <option value="Deserts">Desserts</option>
+                  <option value="Sandwich">Sandwich</option>
+                  <option value="Cake">Cake</option>
+                  <option value="Pure Veg">Pure Veg</option>
+                  <option value="Pasta">Pasta</option>
+                  <option value="Noodles">Noodles</option>
+                </select>
+              </div>
+
+              <div className="form-field">
+                <label className="form-label">Price (₹)</label>
+                <div className="price-input-wrapper">
+                  <span className="currency-symbol">₹</span>
+                  <input
+                    className="form-input price-input"
+                    type="number"
+                    name="price"
+                    onChange={onChangeHandler}
+                    value={data.price}
+                    placeholder="0.00"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="form-actions">
+              <button type="submit" className="submit-btn" disabled={loading}>
+                {loading ? (
+                  <span className="loading-spinner"></span>
+                ) : (
+                  <>
+                    <span className="btn-icon">✨</span>
+                    Publish Item
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
-
-        {/* Submit */}
-        <button type="submit" className="add-btn" disabled={loading}>
-          {loading ? "Adding..." : "➕ Add Product"}
-        </button>
       </form>
     </div>
   );

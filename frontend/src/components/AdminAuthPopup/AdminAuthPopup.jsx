@@ -31,9 +31,26 @@ const AdminAuthPopup = ({ onClose, setAdminToken }) => {
         }));
     };
 
+    const validateForm = () => {
+        if (!isLogin && formData.fullName.trim().length < 2) {
+            toast.error("Name must be at least 2 characters long.");
+            return false;
+        }
+        if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            toast.error("Please enter a valid email address.");
+            return false;
+        }
+        if (formData.password.length < 6) {
+            toast.error("Password must be at least 6 characters long.");
+            return false;
+        }
+        return true;
+    };
+
     // handle submit
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!validateForm()) return;
         setLoading(true);
 
         try {
@@ -60,6 +77,11 @@ const AdminAuthPopup = ({ onClose, setAdminToken }) => {
                 if (setAdminToken) setAdminToken(token);
                 onClose();
                 toast.success(isLogin ? "Admin logged in!" : "Admin account created!");
+
+                // Redirect to admin dashboard
+                setTimeout(() => {
+                    window.location.href = "http://localhost:5174/";
+                }, 1000);
             } else {
                 toast.error(res.data?.message || "Authentication failed.");
             }

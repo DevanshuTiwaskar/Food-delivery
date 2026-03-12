@@ -28,7 +28,7 @@ const StoreContextProvider = ({ children }) => {
         await api.post(
           "/api/cart/add",
           { itemId },
-          { headers: { Authorization: `Bearer ${token}` } }
+          { headers: { token } }
         );
       } catch (err) {
         console.error("Failed to sync addToCart:", err);
@@ -61,7 +61,7 @@ const StoreContextProvider = ({ children }) => {
         await api.post(
           "/api/cart/remove",
           { itemId },
-          { headers: { Authorization: `Bearer ${token}` } }
+          { headers: { token } }
         );
       } catch (err) {
         console.error("Failed to sync removeFromCart:", err);
@@ -105,7 +105,7 @@ const StoreContextProvider = ({ children }) => {
       const response = await api.post(
         "/api/cart/get",
         {},
-        { headers: { Authorization: `Bearer ${authToken}` } }
+        { headers: { token: authToken } }
       );
       setCartItems(response.data?.cartData || {});
     } catch (err) {
@@ -117,19 +117,22 @@ const StoreContextProvider = ({ children }) => {
   // EFFECTS
   // -------------------------------
   useEffect(() => {
-    fetchFoodList();
-
-    // load local cart (for guest users)
-    const localCart = localStorage.getItem("cart");
-    if (localCart) {
-      setCartItems(JSON.parse(localCart));
+    async function loadData() {
+      await fetchFoodList();
+      
+      const localToken = localStorage.getItem("token");
+      if (localToken) {
+        setToken(localToken);
+        await loadCartData(localToken);
+      } else {
+        const localCart = localStorage.getItem("cart");
+        if (localCart) {
+          setCartItems(JSON.parse(localCart));
+        }
+      }
     }
-
-    // load server cart if token exists
-    if (token) {
-      loadCartData(token);
-    }
-  }, [token]);
+    loadData();
+  }, []);
 
   useEffect(() => {
     if (token) {

@@ -63,7 +63,7 @@ const LoginPopup = ({ setShowLogin }) => {
         localStorage.setItem("token", token);
         localStorage.setItem("userData", JSON.stringify(user));
 
-        await loadCartData({ token });
+        await loadCartData(token);
         setShowLogin(false);
         toast.success(
           currState === "Login" ? "Welcome back!" : "Account created successfully!"

@@ -30,7 +30,7 @@ const placeOrder = async (req, res) => {
         product_data: {
           name: item.name, // product name shown in Stripe checkout
         },
-        unit_amount: item.price * 100 * 80, //  price is multiplied (probably wrong calculation: *100 for paise, *80 looks like exchange conversion)
+        unit_amount: item.price * 100, // Stripe expects amount in lowest currency unit (paise)
       },
       quantity: item.quantity,
     }));
@@ -41,12 +41,13 @@ const placeOrder = async (req, res) => {
         product_data: {
           name: "Delivery Charge",
         },
-        unit_amount: 5 * 80 * 100, // hardcoded delivery cost (₹4000) – probably a mistake
+        unit_amount: 40 * 100, // Delivery fee: ₹40 -> 4000 paise
       },
       quantity: 1,
     });
 
     const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
       success_url: `http://localhost:5173/verify?success=true&orderId=${newOrder._id}`,
       cancel_url: `http://localhost:5173/verify?success=false&orderId=${newOrder._id}`,
       line_items: line_items,

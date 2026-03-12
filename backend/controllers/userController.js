@@ -21,10 +21,8 @@ async function createUser({
     throw new Error("Invalid email format");
   }
 
-  if (!validator.isStrongPassword(password, { minSymbols: 0 })) {
-    throw new Error(
-      "Password must be at least 8 chars long, include 1 uppercase, 1 lowercase, and 1 number"
-    );
+  if (password.length < 6) {
+    throw new Error("Password must be at least 6 characters long");
   }
 
   // ✅ Check if user exists

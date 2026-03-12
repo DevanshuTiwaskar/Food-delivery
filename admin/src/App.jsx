@@ -10,16 +10,17 @@ import 'react-toastify/dist/ReactToastify.css';
 const App = () => {
   return (
     <div className='app'>
-      <ToastContainer/>
-      <Navbar/>
-      <hr />
+      <ToastContainer />
+      <Navbar />
       <div className="app-content">
-        <Sidebar/>
-        <Routes>
-          <Route path="/add" element={<Add/>}/>
-          <Route path="/list" element={<List/>}/>
-          <Route path="/orders" element={<Orders/>}/>
-        </Routes>
+        <Sidebar />
+        <main className="main-view">
+          <Routes>
+            <Route path="/add" element={<Add />} />
+            <Route path="/list" element={<List />} />
+            <Route path="/orders" element={<Orders />} />
+          </Routes>
+        </main>
       </div>
     </div>
   )

@@ -38,7 +38,7 @@ const PlaceOrder = () => {
       const orderData = {
         address: data,
         items: orderItems,
-        amount: getTotalCartAmount() + 5, // add delivery fee
+        amount: getTotalCartAmount() + 40, // add delivery fee
       };
 
       const response = await api.post("/api/order/place", orderData, {
@@ -91,11 +91,11 @@ const PlaceOrder = () => {
         <div className="cart-total">
           <h2>Cart Totals</h2>
           <div>
-            <div className="cart-total-details"><p>Subtotal</p><p>${getTotalCartAmount()}</p></div>
+            <div className="cart-total-details"><p>Subtotal</p><p>₹{getTotalCartAmount()}</p></div>
             <hr />
-            <div className="cart-total-details"><p>Delivery Fee</p><p>${getTotalCartAmount() === 0 ? 0 : 5}</p></div>
+            <div className="cart-total-details"><p>Delivery Fee</p><p>₹{getTotalCartAmount() === 0 ? 0 : 40}</p></div>
             <hr />
-            <div className="cart-total-details"><b>Total</b><b>${getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 5}</b></div>
+            <div className="cart-total-details"><b>Total</b><b>₹{getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 40}</b></div>
           </div>
         </div>
         <button className='place-order-submit' type='submit'>Proceed To Payment</button>

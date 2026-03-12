@@ -1,0 +1,109 @@
+.dashboard-container {
+    padding: 2rem;
+    width: 100%;
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  .dashboard-header {
+    margin-bottom: 2rem;
+  }
+  
+  .dashboard-header h1 {
+    font-size: 2rem;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+  
+  .dashboard-header p {
+    color: #64748b;
+  }
+  
+  .dashboard-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+    font-size: 1.2rem;
+    color: #64748b;
+  }
+  
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .metric-card {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+    border-radius: 16px;
+    gap: 1.5rem;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+  }
+  
+  .metric-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .metric-icon {
+    font-size: 2.5rem;
+    background: #f8fafc;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+  }
+  
+  .metric-info .metric-label {
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+  }
+  
+  .metric-info .metric-value {
+    color: #1e293b;
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+  
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  
+  .chart-container {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+  
+  .chart-container h3 {
+    margin-bottom: 1.5rem;
+    color: #1e293b;
+    font-size: 1.2rem;
+  }
+  
+  .chart-wrapper {
+    height: 300px;
+    width: 100%;
+  }
+  
+  @media (max-width: 1100px) {
+    .charts-grid {
+      grid-template-columns: 1fr;
+    }
+  }

@@ -1,6 +1,7 @@
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import Stripe from "stripe";
+import sendOrderConfirmationEmail from "../utils/emailService.js";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // config variables
@@ -105,7 +106,15 @@ const verifyOrder = async (req, res) => {
   try {
     if (success === "true") {
       // If payment success → mark order as paid
-      await orderModel.findByIdAndUpdate(orderId, { payment: true });
+      const updatedOrder = await orderModel.findByIdAndUpdate(orderId, { payment: true }, { new: true });
+      
+      // Fetch user email
+      const user = await userModel.findById(updatedOrder.userId);
+      if (user && user.email) {
+        // Send email receipt asynchronously
+        sendOrderConfirmationEmail(user.email, updatedOrder);
+      }
+
       res.json({ success: true, message: "Paid" });
     } else {
           // If payment failed → delete the order

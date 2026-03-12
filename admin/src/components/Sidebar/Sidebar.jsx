@@ -6,6 +6,12 @@ import { NavLink } from "react-router-dom";
 const Sidebar = () => {
   const menuItems = [
     {
+      path: "/",
+      label: "Dashboard",
+      icon: "📊",
+      img: assets.order_icon
+    },
+    {
       path: "/add",
       label: "Add Items",
       icon: "➕",

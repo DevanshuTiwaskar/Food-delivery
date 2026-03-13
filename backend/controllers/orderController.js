@@ -48,10 +48,12 @@ const placeOrder = async (req, res) => {
       quantity: 1,
     });
 
+    const frontend_origin = req.body.origin || "https://food-delivery-one-tau.vercel.app";
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      success_url: `http://localhost:5173/verify?success=true&orderId=${newOrder._id}`,
-      cancel_url: `http://localhost:5173/verify?success=false&orderId=${newOrder._id}`,
+      success_url: `${frontend_origin}/verify?success=true&orderId=${newOrder._id}`,
+      cancel_url: `${frontend_origin}/verify?success=false&orderId=${newOrder._id}`,
       line_items: line_items,
       mode: "payment",
     });

@@ -38,7 +38,8 @@ const PlaceOrder = () => {
       const orderData = {
         address: data,
         items: orderItems,
-        amount: getTotalCartAmount() + 40, // add delivery fee
+        amount: getTotalCartAmount() + 40, 
+        origin: window.location.origin // Dynamic origin for correct redirection
       };
 
       const response = await api.post("/api/order/place", orderData, {

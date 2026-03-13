@@ -13,11 +13,52 @@ import Footer from './components/Footer/Footer';
 import LoginPopup from './components/LoginPopup/LoginPopup';
 import AdminAuthPopup from './components/AdminAuthPopup/AdminAuthPopup';
 import Navbar from './components/Navbar/Navbar';
+import Preloader from './components/Preloader/Preloader';
+import Lenis from 'lenis';
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
+
+  // Handle Preloader timing
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2800); // Premium length for impact
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Initialize Lenis for smooth scrolling
+  useEffect(() => {
+    const lenis = new Lenis({
+      lerp: 0.1, // Smoother, more consistent feel
+      wheelMultiplier: 1,
+      gestureOrientation: 'vertical',
+      normalizeWheel: true,
+      smoothTouch: false,
+    });
+
+    let rafId;
+    function raf(time) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+
+    rafId = requestAnimationFrame(raf);
+
+    // Update Lenis on route change to ensure scroll height is recalculated
+    lenis.on('scroll', () => {
+      // Optional: handle any scroll-based animations here efficiently
+    });
+
+    return () => {
+      lenis.destroy();
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
 
   useEffect(() => {
     switch (location.pathname) {
@@ -45,14 +86,17 @@ const App = () => {
     <>
       <ToastContainer position="top-right" autoClose={3000} />
 
+      {/* Modern Intro Preloader */}
+      {loading && <Preloader />}
+
       {/* Popups */}
       {showLogin && <LoginPopup setShowLogin={setShowLogin} />}
       {showAdminLogin && <AdminAuthPopup onClose={() => setShowAdminLogin(false)} />}
 
-      <div className="app">
-        {/* Enhanced Navbar */}
-        <Navbar setShowLogin={setShowLogin} setShowAdminLogin={setShowAdminLogin} />
+      {/* Enhanced Navbar - 100% width sticky (No transform wrapper) */}
+      {!loading && <Navbar setShowLogin={setShowLogin} setShowAdminLogin={setShowAdminLogin} />}
 
+      <div className={`app ${loading ? 'app-content-hidden' : 'app-content-visible'}`}>
         {/* Routes */}
         <Routes>
           <Route path="/" element={<Home />} />
@@ -64,7 +108,7 @@ const App = () => {
       </div>
 
       {/* Footer */}
-      <Footer />
+      {!loading && <Footer />}
     </>
   )
 };

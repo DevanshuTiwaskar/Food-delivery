@@ -1,8 +1,8 @@
-import { useContext } from 'react'
+import { useContext, memo } from 'react'
 import './ExploreMenu.css'
 import { StoreContext } from '../../Context/StoreContext'
 
-const ExploreMenu = ({ category, setCategory }) => {
+const ExploreMenu = memo(({ category, setCategory }) => {
 
   const { menu_list } = useContext(StoreContext);
 
@@ -42,6 +42,6 @@ const ExploreMenu = ({ category, setCategory }) => {
       <hr />
     </div>
   )
-}
+})
 
 export default ExploreMenu

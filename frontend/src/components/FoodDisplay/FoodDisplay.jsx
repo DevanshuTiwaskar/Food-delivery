@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useMemo, useCallback } from "react";
 import "./FoodDisplay.css";
 import FoodItem from "../FoodItem/FoodItem";
 import { StoreContext } from "../../Context/StoreContext";
@@ -12,21 +12,28 @@ const FoodDisplay = ({ category }) => {
     setCurrentPage(1);
   }, [category]);
 
-  // Filter foods based on category
-  const filteredFoods = food_list.filter(
-    (item) => category === "All" || category === item.category
-  );
+  // Filter foods based on category - Memoized
+  const filteredFoods = useMemo(() => {
+    return food_list.filter(
+      (item) => category === "All" || category === item.category
+    );
+  }, [food_list, category]);
 
-  const totalPages = Math.ceil(filteredFoods.length / itemsPerPage);
-  const offset = (currentPage - 1) * itemsPerPage;
-  const currentItems = filteredFoods.slice(offset, offset + itemsPerPage);
+  const totalPages = useMemo(() => {
+    return Math.ceil(filteredFoods.length / itemsPerPage);
+  }, [filteredFoods.length, itemsPerPage]);
 
-  const handlePageChange = (page) => {
+  const currentItems = useMemo(() => {
+    const offset = (currentPage - 1) * itemsPerPage;
+    return filteredFoods.slice(offset, offset + itemsPerPage);
+  }, [filteredFoods, currentPage, itemsPerPage]);
+
+  const handlePageChange = useCallback((page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
       document.getElementById("food-display")?.scrollIntoView({ behavior: "smooth" });
     }
-  };
+  }, [totalPages]);
 
   return (
     <div className="food-display container" id="food-display">

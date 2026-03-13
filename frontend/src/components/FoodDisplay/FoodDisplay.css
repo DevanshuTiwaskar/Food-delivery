@@ -38,15 +38,22 @@
     }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 767px) {
     .food-display-list {
         column-count: 2;
+        column-gap: 1rem;
+    }
+    .food-display {
+        padding-top: 20px;
     }
 }
 
-@media (max-width: 550px) {
+@media (max-width: 480px) {
     .food-display-list {
         column-count: 1;
+    }
+    .food-display-header h2 {
+        font-size: 1.6rem;
     }
 }
 

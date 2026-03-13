@@ -27,6 +27,9 @@ const Header = () => {
 
     return (
         <div className='header' id='home'>
+            {/* Background Image with separate div for FX */}
+            <div className='header-bg-img'></div>
+
             {/* Background overlay for better text readability */}
             <div className='header-overlay'></div>
 

@@ -56,10 +56,12 @@ const placeOrder = async (req, res) => {
       mode: "payment",
     });
 
+    console.log("Place Order Request Body:", req.body);
     res.json({ success: true, session_url: session.url });
   } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: "Error" });
+    console.error("Order placement error stack:", error.stack);
+    console.error("Order placement error message:", error.message);
+    res.json({ success: false, message: error.message || "Error" });
   }
 };
 

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useMemo } from 'react'
 import './Cart.css'
 import { StoreContext } from '../../Context/StoreContext'
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,10 @@ const Cart = () => {
   const [appliedPromo, setAppliedPromo] = useState(null);
   const [promoMessage, setPromoMessage] = useState({ text: '', type: '' });
 
-  const cartData = food_list.filter(item => cartItems[item._id] > 0);
+  // Memoized cart data for performance
+  const cartData = useMemo(() => {
+    return food_list.filter(item => cartItems[item._id] > 0);
+  }, [food_list, cartItems]);
 
   const handleApplyPromo = () => {
     const code = promoCode.trim().toUpperCase();
@@ -43,98 +46,107 @@ const Cart = () => {
   const finalTotal = subtotal + deliveryFee - discountAmount;
 
   return (
-    <div className='cart container fade-in'>
-      <div className="cart-header">
-        <h1>Your Gourmet Cart</h1>
-        <p className="text-muted">Review your selected delicacies before checkout.</p>
-      </div>
-
+    <div className='cart-page fade-in'>
       {cartData.length > 0 ? (
-        <div className="cart-masonry-wrapper">
-          <div className="cart-masonry-grid">
-            {cartData.map((item, index) => (
-              <div key={index} className="cart-card">
-                <div className="cart-card-img">
-                  <img src={item.image.startsWith("http") ? item.image : url + "/images/" + item.image} alt={item.name} />
-                  <div className="cart-card-badge">₹{item.price}</div>
+        <div className="cart-content-grid">
+          {/* Items List */}
+          <div className="cart-items-section">
+            <div className="cart-items-list">
+              {cartData.map((item, index) => (
+                <div key={item._id} className="cart-item-card premium-card">
+                  <div className="item-img-box">
+                    <img src={item.image.startsWith("http") ? item.image : url + "/images/" + item.image} alt={item.name} />
+                  </div>
+                  <div className="item-info-box">
+                    <div className="item-title-row">
+                      <h3>{item.name}</h3>
+                      <p className="item-category text-muted">{item.category || "Main Course"}</p>
+                    </div>
+                    <div className="item-price-row">
+                       <span className="unit-price">₹{item.price}</span>
+                       <div className="quantity-controls-premium">
+                          <button onClick={() => removeFromCart(item._id)} className="qty-btn">−</button>
+                          <span className="qty-val">{cartItems[item._id]}</span>
+                          <button onClick={() => addToCart(item._id)} className="qty-btn">+</button>
+                       </div>
+                       <span className="item-total-price">₹{item.price * cartItems[item._id]}</span>
+                    </div>
+                  </div>
+                  <button className="delete-item-btn" onClick={() => removeFromCart(item._id, true)}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M18 6L6 18M6 6l12 12"></path>
+                    </svg>
+                  </button>
                 </div>
-                <div className="cart-card-info">
-                  <div className="cart-card-top">
-                    <h3>{item.name}</h3>
-                    <button className="remove-btn" onClick={() => removeFromCart(item._id)}>×</button>
+              ))}
+            </div>
+          </div>
+
+          {/* Side Summary */}
+          <div className="cart-summary-section">
+            <div className="summary-card premium-glass">
+              <h3>Order Summary</h3>
+              <div className="summary-list">
+                <div className="summary-item">
+                  <span>Subtotal</span>
+                  <span>₹{subtotal}</span>
+                </div>
+                <div className="summary-item">
+                  <span>Delivery Fee</span>
+                  <span>₹{deliveryFee}</span>
+                </div>
+                {discountAmount > 0 && (
+                  <div className="summary-item discount-item">
+                    <span>Discount</span>
+                    <span>-₹{discountAmount.toFixed(2)}</span>
                   </div>
-                  <div className="cart-card-details">
-                    <div className="quantity-control">
-                      <button onClick={() => removeFromCart(item._id)}>−</button>
-                      <span>{cartItems[item._id]}</span>
-                      <button onClick={() => addToCart(item._id)}>+</button>
-                    </div>
-                    <div className="item-total">
-                      <p className="label">Total</p>
-                      <p className="price">₹{item.price * cartItems[item._id]}</p>
-                    </div>
-                  </div>
+                )}
+                <div className="summary-divider"></div>
+                <div className="summary-item total-item">
+                  <span>Total</span>
+                  <span>₹{finalTotal.toFixed(2)}</span>
                 </div>
               </div>
-            ))}
+
+              <div className="promo-section-premium">
+                <p className="promo-label">Promo Code</p>
+                <div className="promo-box">
+                  <input 
+                    type="text" 
+                    placeholder="Promo code (WELCOME50 / DISCOUNT10)" 
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value)}
+                  />
+                  <button onClick={handleApplyPromo}>Apply</button>
+                </div>
+                {promoMessage.text && (
+                  <p className={`promo-feedback ${promoMessage.type}`}>
+                    {promoMessage.text}
+                  </p>
+                )}
+              </div>
+
+              <button className="checkout-btn-premium" onClick={() => navigate('/order')}>
+                Secure Checkout
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M5 12h14M12 5l7 7-7 7"></path>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       ) : (
-        <div className="empty-cart-view">
-          <div className="empty-icon">🛒</div>
-          <h2>Your cart is empty</h2>
-          <p>Treat yourself to something delicious from our menu!</p>
-          <button className="return-btn" onClick={() => navigate('/')}>Explore Menu</button>
-        </div>
-      )}
-
-      {cartData.length > 0 && (
-        <div className="cart-summary-section">
-          <div className="cart-total-card">
-            <h2>Order Summary</h2>
-            <div className="summary-details">
-              <div className="summary-row">
-                <span>Subtotal</span>
-                <span>₹{subtotal}</span>
-              </div>
-              <div className="summary-row">
-                <span>Delivery Fee</span>
-                <span>₹{deliveryFee}</span>
-              </div>
-              {discountAmount > 0 && (
-                <div className="summary-row discount-row" style={{ color: '#22c55e' }}>
-                  <span>Discount ({appliedPromo?.type === 'PERCENT' ? '10%' : '₹50 Flat'})</span>
-                  <span>-₹{discountAmount.toFixed(2)}</span>
-                </div>
-              )}
-              <hr />
-              <div className="summary-row total">
-                <span>Total</span>
-                <span>₹{finalTotal.toFixed(2)}</span>
-              </div>
-            </div>
-            <button className="checkout-btn" onClick={() => navigate('/order')}>
-              Proceed to Checkout
-            </button>
+        <div className="empty-cart-premium">
+          <div className="empty-visual">
+             <div className="empty-circle">
+                <span className="empty-emoji">🍲</span>
+             </div>
           </div>
-
-          <div className="promo-card">
-            <p>Have a promo code?</p>
-            <div className='promo-input-group'>
-              <input 
-                type="text" 
-                placeholder='Enter code here (e.g. DISCOUNT10)' 
-                value={promoCode}
-                onChange={(e) => setPromoCode(e.target.value)}
-              />
-              <button onClick={handleApplyPromo}>Apply</button>
-            </div>
-            {promoMessage.text && (
-              <p className={`promo-message ${promoMessage.type === 'error' ? 'text-danger' : 'text-success'}`} style={{ marginTop: '10px', fontSize: '0.9rem', color: promoMessage.type === 'error' ? '#ef4444' : '#22c55e' }}>
-                {promoMessage.text}
-              </p>
-            )}
-          </div>
+          <h2>Your cart is longing for flavor</h2>
+          <p>Discover our curated selection of gourmet dishes and start your culinary journey.</p>
+          <button className="explore-btn-premium" onClick={() => navigate('/')}>
+            Explore Menu
+          </button>
         </div>
       )}
     </div>

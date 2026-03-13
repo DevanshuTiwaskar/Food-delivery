@@ -1,15 +1,28 @@
 .header {
-    height: min(70vh, 600px);
-    margin: 0 auto 4rem;
+    height: min(85vh, 750px);
+    margin: 1rem auto 5rem;
     position: relative;
-    border-radius: 24px;
+    border-radius: 40px;
     overflow: hidden;
-    background: linear-gradient(135deg, #ff6b35 0%, #ff4c24 50%, #e63946 100%);
+    background: #000;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.15);
+}
+
+/* Background image handling - making it more professional */
+.header-bg-img {
+    position: absolute;
+    inset: 0;
     background-image: url('/header_img.png');
-    background-size: cover; /* make sure it covers entire header */
-    background-position: center; /* center the image */
+    background-size: cover;
+    background-position: center;
     background-repeat: no-repeat;
-    box-shadow: 0 20px 60px rgba(255, 76, 36, 0.3);
+    transform: scale(1.05);
+    transition: transform 1.5s ease;
+    z-index: 0;
+}
+
+.header:hover .header-bg-img {
+    transform: scale(1);
 }
 
 /* Optional overlay for readability */
@@ -75,17 +88,19 @@
 /* Title */
 .header-title {
     font-size: clamp(2.5rem, 5vw, 4.5rem);
-    font-weight: 700;
+    font-weight: 800;
     color: white;
-    line-height: 1.1;
-    text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    line-height: 1.05;
+    text-shadow: 0 10px 30px rgba(0,0,0,0.5);
     animation: slideInFromLeft 1s ease-out 0.5s both;
 }
 
 .highlight {
-    background: linear-gradient(135deg,#ffeb3b,#ffc107);
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 10px rgba(255, 165, 0, 0.3));
 }
 
 /* Description */
@@ -181,16 +196,20 @@
 /* ---------- Responsive ---------- */
 @media (max-width: 1200px) { .header-contents{max-width:60%;} }
 @media (max-width: 768px) {
-    .header { height: min(50vh,400px); margin: 0 1rem 2rem; border-radius:16px; background-position:center; }
-    .header-contents { max-width:85%; bottom:10%; left:1rem; right:1rem; gap:1rem; }
-    .header-description { display:none; }
-    .header-actions { flex-direction: column; width:100%; }
-    .btn-primary, .btn-secondary { width:100%; justify-content:center; padding:0.875rem 1.5rem; font-size:0.9rem; }
-    .floating-elements { display:none; }
+    .header { height: min(60vh, 500px); margin: 0 1rem 2rem; border-radius: 20px; background-position: center; }
+    .header-contents { max-width: 90%; bottom: 12%; left: 1.25rem; right: 1.25rem; gap: 1.5rem; }
+    .header-title { font-size: clamp(2.2rem, 8vw, 3rem); text-align: left; }
+    .header-description { display: block; font-size: 0.95rem; line-height: 1.5; color: rgba(255, 255, 255, 0.85); -webkit-line-clamp: 3; line-clamp: 3; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+    .header-actions { flex-direction: row; gap: 0.75rem; width: 100%; }
+    .btn-primary, .btn-secondary { flex: 1; padding: 0.875rem 1rem; font-size: 0.9rem; white-space: nowrap; }
+    .floating-elements { display: none; }
+    .header-stats { display: none; }
 }
 @media (max-width: 480px) {
-    .header { margin:0 0.5rem 1.5rem; border-radius:12px; }
-    .header-contents { left:0.75rem; right:0.75rem; max-width:none; }
-    .header-stats { flex-wrap:wrap; gap:0.75rem; }
-    .stat-divider { display:none; }
+    .header { margin: 0 0.75rem 1.5rem; border-radius: 16px; height: 450px; }
+    .header-contents { left: 1rem; right: 1rem; bottom: 10%; gap: 1.25rem; }
+    .header-title { font-size: 2rem; }
+    .header-badge { font-size: 0.75rem; padding: 0.4rem 0.8rem; }
+    .header-actions { flex-direction: column; }
+    .btn-primary, .btn-secondary { width: 100%; }
 }

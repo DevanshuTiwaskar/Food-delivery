@@ -49,7 +49,7 @@ const PlaceOrder = () => {
         const { session_url } = response.data;
         window.location.replace(session_url); // redirect to payment
       } else {
-        toast.error("Something went wrong while placing the order");
+        toast.error(response.data.message || "Something went wrong while placing the order");
       }
     } catch (error) {
       console.error("Place order error:", error);

@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useCallback, useMemo } from "react";
 import { menu_list } from "../assets/assets";
 import api from "../api/client"; // axios instance
 
@@ -14,9 +14,34 @@ const StoreContextProvider = ({ children }) => {
   });
 
   // -------------------------------
+  // API CALLS
+  // -------------------------------
+  const fetchFoodList = useCallback(async () => {
+    try {
+      const response = await api.get("/api/food/list");
+      setFoodList(response.data?.data || []);
+    } catch (err) {
+      console.error("Failed to fetch food list:", err);
+    }
+  }, []);
+
+  const loadCartData = useCallback(async (authToken) => {
+    try {
+      const response = await api.post(
+        "/api/cart/get",
+        {},
+        { headers: { token: authToken } }
+      );
+      setCartItems(response.data?.cartData || {});
+    } catch (err) {
+      console.error("Failed to load cart data:", err);
+    }
+  }, []);
+
+  // -------------------------------
   // CART FUNCTIONS
   // -------------------------------
-  const addToCart = async (itemId) => {
+  const addToCart = useCallback(async (itemId) => {
     setCartItems((prev) => {
       const updated = { ...prev, [itemId]: (prev[itemId] || 0) + 1 };
       localStorage.setItem("cart", JSON.stringify(updated));
@@ -34,16 +59,16 @@ const StoreContextProvider = ({ children }) => {
         console.error("Failed to sync addToCart:", err);
         // rollback
         setCartItems((prev) => {
-          const rollback = { ...prev, [itemId]: prev[itemId] - 1 };
+          const rollback = { ...prev, [itemId]: (prev[itemId] || 1) - 1 };
           if (rollback[itemId] <= 0) delete rollback[itemId];
           localStorage.setItem("cart", JSON.stringify(rollback));
           return rollback;
         });
       }
     }
-  };
+  }, [token]);
 
-  const removeFromCart = async (itemId) => {
+  const removeFromCart = useCallback(async (itemId) => {
     setCartItems((prev) => {
       const newCount = (prev[itemId] || 0) - 1;
       const updated = { ...prev };
@@ -73,9 +98,9 @@ const StoreContextProvider = ({ children }) => {
         });
       }
     }
-  };
+  }, [token]);
 
-  const getTotalCartAmount = () => {
+  const getTotalCartAmount = useCallback(() => {
     let totalAmount = 0;
     for (const itemId in cartItems) {
       if (cartItems[itemId] > 0) {
@@ -86,32 +111,7 @@ const StoreContextProvider = ({ children }) => {
       }
     }
     return totalAmount;
-  };
-
-  // -------------------------------
-  // API CALLS
-  // -------------------------------
-  const fetchFoodList = async () => {
-    try {
-      const response = await api.get("/api/food/list");
-      setFoodList(response.data?.data || []);
-    } catch (err) {
-      console.error("Failed to fetch food list:", err);
-    }
-  };
-
-  const loadCartData = async (authToken) => {
-    try {
-      const response = await api.post(
-        "/api/cart/get",
-        {},
-        { headers: { token: authToken } }
-      );
-      setCartItems(response.data?.cartData || {});
-    } catch (err) {
-      console.error("Failed to load cart data:", err);
-    }
-  };
+  }, [cartItems, food_list]);
 
   // -------------------------------
   // EFFECTS
@@ -127,12 +127,16 @@ const StoreContextProvider = ({ children }) => {
       } else {
         const localCart = localStorage.getItem("cart");
         if (localCart) {
-          setCartItems(JSON.parse(localCart));
+          try {
+            setCartItems(JSON.parse(localCart));
+          } catch (e) {
+            console.error("Failed to parse local cart", e);
+          }
         }
       }
     }
     loadData();
-  }, []);
+  }, [fetchFoodList, loadCartData]);
 
   useEffect(() => {
     if (token) {
@@ -155,7 +159,7 @@ const StoreContextProvider = ({ children }) => {
   // -------------------------------
   // CONTEXT VALUE
   // -------------------------------
-  const contextValue = {
+  const contextValue = useMemo(() => ({
     food_list,
     menu_list,
     cartItems,
@@ -168,7 +172,7 @@ const StoreContextProvider = ({ children }) => {
     setUserData,
     loadCartData,
     setCartItems,
-  };
+  }), [food_list, cartItems, addToCart, removeFromCart, getTotalCartAmount, token, userData, loadCartData]);
 
   return (
     <StoreContext.Provider value={contextValue}>

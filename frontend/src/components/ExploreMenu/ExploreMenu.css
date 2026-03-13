@@ -130,13 +130,31 @@
 }
 
 @media (max-width: 768px) {
-  .explore-menu-list {
-    gap: 1.5rem;
+  .explore-menu {
+    padding: 1.5rem 0;
   }
   
+  .explore-menu-list {
+    gap: 1.25rem;
+    padding: 1rem 1rem;
+    margin: 0 -1rem; /* Full width bleed */
+  }
+  
+  .explore-menu-list-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 40px;
+    background: linear-gradient(to right, transparent, white);
+    pointer-events: none;
+    z-index: 2;
+  }
+
   .category-img-container {
-     min-width: 80px;
-     min-height: 80px;
+     min-width: 75px;
+     min-height: 75px;
   }
 }
 

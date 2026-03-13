@@ -6,7 +6,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Outfit', sans-serif;
-  scroll-behavior: smooth;
+  scroll-behavior: auto !important; /* Prevent conflict with manual smooth scroll libraries */
 }
 
 body {
@@ -24,11 +24,24 @@ a {
 /* ---------- App Container ---------- */
 .app {
   width: 100%;
-  max-width: 1400px; /* prevent stretching on large screens */
-  margin: 0 auto; /* center the app */
-  padding: 0 2rem; /* left-right padding for breathing space */
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
   position: relative;
-  transition: all 0.3s ease;
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.app-content-hidden {
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+  pointer-events: none;
+}
+
+.app-content-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
 }
 
 /* ---------- Section spacing for fixed navbar ---------- */

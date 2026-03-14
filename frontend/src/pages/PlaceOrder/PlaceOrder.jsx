@@ -68,7 +68,16 @@ const PlaceOrder = () => {
   }, [token]);
 
   return (
-    <form onSubmit={placeOrder} className='place-order'>
+    <div className="place-order-page page-clearance">
+      <div className="place-order-nav">
+        <button className="back-btn" onClick={() => navigate('/cart')}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+          </svg>
+          Back to Cart
+        </button>
+      </div>
+      <form onSubmit={placeOrder} className='place-order'>
       <div className="place-order-left">
         <p className='title'>Delivery Information</p>
         <div className="multi-field">
@@ -102,6 +111,7 @@ const PlaceOrder = () => {
         <button className='place-order-submit' type='submit'>Proceed To Payment</button>
       </div>
     </form>
+    </div>
   )
 }
 

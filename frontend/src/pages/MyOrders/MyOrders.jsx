@@ -44,6 +44,14 @@ const MyOrders = () => {
 
   return (
     <div className='my-orders-page container fade-in page-clearance'>
+      <div className="my-orders-nav">
+        <button className="back-btn-minimal" onClick={() => navigate('/')}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+          </svg>
+          Back to Home
+        </button>
+      </div>
       <div className="orders-header">
         <h1 className="premium-title">Your <span className="highlight">Culinary History</span></h1>
         <p className="text-muted">Track your journeys through flavors and delicate cuisines.</p>

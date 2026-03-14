@@ -110,7 +110,7 @@ const App = () => {
       </div>
 
       {/* Footer */}
-      {!loading && <Footer />}
+      {!loading && !['/order', '/track-order', '/verify'].some(path => location.pathname.startsWith(path)) && <Footer />}
     </>
   )
 };

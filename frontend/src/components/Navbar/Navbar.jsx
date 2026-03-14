@@ -205,7 +205,10 @@ const Navbar = memo(({ setShowLogin, setShowAdminLogin }) => {
            </nav>
            <div className="panel-footer">
              {!token ? (
-               <button className="btn-panel-auth" onClick={() => { setShowLogin(true); setMenuOpen(false); }}>Get Started</button>
+               <div className="panel-auth-group">
+                 <button className="btn-panel-auth" onClick={() => { setShowLogin(true); setMenuOpen(false); }}>User Sign In</button>
+                 <button className="btn-panel-admin" onClick={() => { setShowAdminLogin(true); setMenuOpen(false); }}>Admin Access</button>
+               </div>
              ) : (
                 <button className="btn-panel-logout" onClick={logout}>Logout</button>
              )}

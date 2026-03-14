@@ -5,6 +5,29 @@
     min-height: calc(100vh - 100px);
 }
 
+.my-orders-nav {
+  margin-bottom: 2rem;
+}
+
+.back-btn-minimal {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.back-btn-minimal:hover {
+  color: #ff4c24;
+  transform: translateX(-5px);
+}
+
 .orders-header {
     margin-bottom: 4rem;
     text-align: center;

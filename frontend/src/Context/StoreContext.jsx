@@ -138,6 +138,22 @@ const StoreContextProvider = ({ children }) => {
     loadData();
   }, [fetchFoodList, loadCartData]);
 
+  // Listen for session expiration
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      setToken("");
+      setUserData(null);
+      setCartItems({});
+      localStorage.removeItem("token");
+      localStorage.removeItem("userData");
+      localStorage.removeItem("adminToken");
+      toast.error("Session expired. Please log in again.");
+    };
+
+    window.addEventListener("session-expired", handleSessionExpired);
+    return () => window.removeEventListener("session-expired", handleSessionExpired);
+  }, []);
+
   useEffect(() => {
     if (token) {
       localStorage.setItem("token", token);

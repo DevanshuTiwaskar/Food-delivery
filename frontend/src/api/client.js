@@ -13,4 +13,24 @@ const api = axios.create({
   },
 });
 
+// Response interceptor for session expiration
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      // Clear token and user data
+      localStorage.removeItem("token");
+      localStorage.removeItem("userData");
+      localStorage.removeItem("adminToken");
+      
+      // Optionally reload or redirect
+      // window.location.href = "/";
+      
+      // We can use a custom event to notify components if needed
+      window.dispatchEvent(new Event("session-expired"));
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;

@@ -8,6 +8,7 @@ import Cart from './pages/Cart/Cart';
 import PlaceOrder from './pages/PlaceOrder/PlaceOrder';
 import MyOrders from './pages/MyOrders/MyOrders';
 import Verify from './pages/Verify/Verify';
+import TrackOrder from './pages/TrackOrder/TrackOrder';
 
 import Footer from './components/Footer/Footer';
 import LoginPopup from './components/LoginPopup/LoginPopup';
@@ -104,6 +105,7 @@ const App = () => {
           <Route path="/order" element={<PlaceOrder />} />
           <Route path="/myorders" element={<MyOrders />} />
           <Route path="/verify" element={<Verify />} />
+          <Route path="/track-order/:orderId" element={<TrackOrder />} />
         </Routes>
       </div>
 

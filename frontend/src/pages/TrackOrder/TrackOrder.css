@@ -1,0 +1,267 @@
+/* Track Order Premium Styling */
+.track-order-page {
+    padding-top: 40px;
+    padding-bottom: 5rem;
+    min-height: calc(100vh - 100px);
+}
+
+.track-header {
+    text-align: center;
+    margin-bottom: 5rem;
+    position: relative;
+    padding-top: 2rem;
+}
+
+.back-btn-minimal {
+    position: absolute;
+    left: 0;
+    top: -20px;
+    background: #ffffff;
+    padding: 8px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    font-weight: 700;
+    color: #6b7280;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    z-index: 100;
+}
+
+.back-btn-minimal:hover {
+    color: #ff4c24;
+}
+
+.order-id-display {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #9ca3af;
+    letter-spacing: 1px;
+}
+
+/* Stepper UI */
+.tracking-visual-stepper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 1rem 4rem;
+    position: relative;
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    flex: 1;
+}
+
+.step-point {
+    width: 40px;
+    height: 40px;
+    background: #f3f4f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: #9ca3af;
+    border: 3px solid white;
+    box-shadow: 0 0 0 1px #e5e7eb;
+    transition: all 0.5s ease;
+}
+
+.step-label {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #9ca3af;
+    text-align: center;
+}
+
+.step-connector {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    width: 100%;
+    height: 3px;
+    background: #e5e7eb;
+    z-index: -1;
+}
+
+.step-item.active .step-point {
+    background: #ff4c24;
+    color: white;
+    box-shadow: 0 0 20px rgba(255, 76, 36, 0.4);
+    transform: scale(1.1);
+}
+
+.step-item.active .step-label {
+    color: #1a1a1a;
+}
+
+.step-item.completed .step-point {
+    background: #16a34a;
+    color: white;
+}
+
+.step-item.completed .step-connector {
+    background: #16a34a;
+}
+
+/* Hero Section in Card */
+.tracking-status-hero {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    padding: 2.5rem;
+    background: #f8fafc;
+    border-radius: 24px;
+    margin-bottom: 3.5rem;
+}
+
+.status-icon-container {
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.status-icon-container img {
+    width: 45px;
+}
+
+.status-text-content h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1a1a1a;
+    text-transform: capitalize;
+}
+
+.status-text-content p {
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+/* Order Summary */
+.order-summary-tracking {
+    padding: 1rem;
+}
+
+.order-summary-tracking h3 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+}
+
+.items-grid-mini {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.mini-item-card {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: #f9fafb;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.tracking-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.5rem;
+    border-top: 1.5px solid #f3f4f6;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+/* Delivery Interaction Card */
+.delivery-person-card {
+    margin-top: 2rem;
+    padding: 2rem;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    border: 1px solid rgba(255,255,255,0.4);
+}
+
+.avatar-placeholder {
+    width: 60px;
+    height: 60px;
+    background: #ff4c24;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+}
+
+.delivery-info {
+    flex-grow: 1;
+}
+
+.delivery-info h4 {
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+.delivery-info p {
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.help-btn {
+    padding: 10px 20px;
+    border: 1.5px solid #e5e7eb;
+    background: white;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.help-btn:hover {
+    border-color: #ff4c24;
+    color: #ff4c24;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .tracking-visual-stepper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2rem;
+        padding-left: 3rem;
+    }
+    
+    .step-item {
+        flex-direction: row;
+        gap: 1.5rem;
+    }
+    
+    .step-connector {
+        left: 20px;
+        top: 40px;
+        width: 3px;
+        height: 100%;
+        transform: translateX(-50%);
+    }
+    
+    .status-text-content h2 {
+        font-size: 1.4rem;
+    }
+}

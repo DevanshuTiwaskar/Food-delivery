@@ -8,6 +8,7 @@ const StoreContextProvider = ({ children }) => {
   const [food_list, setFoodList] = useState([]);
   const [cartItems, setCartItems] = useState({});
   const [token, setToken] = useState(localStorage.getItem("token") || "");
+  const [serverAwake, setServerAwake] = useState(true); // Track if server is cold-starting
   const [userData, setUserData] = useState(() => {
     const saved = localStorage.getItem("userData");
     return saved ? JSON.parse(saved) : null;
@@ -17,11 +18,26 @@ const StoreContextProvider = ({ children }) => {
   // API CALLS
   // -------------------------------
   const fetchFoodList = useCallback(async () => {
+    const startTime = Date.now();
+    let wakeupShown = false;
+
+    // If the request takes more than 5 seconds, assume cold start
+    const wakeupTimer = setTimeout(() => {
+      wakeupShown = true;
+      setServerAwake(false);
+    }, 5000);
+
     try {
       const response = await api.get("/api/food/list");
       setFoodList(response.data?.data || []);
     } catch (err) {
       console.error("Failed to fetch food list:", err);
+    } finally {
+      clearTimeout(wakeupTimer);
+      if (wakeupShown) {
+        // Small delay so the "connected" state is visible to user
+        setTimeout(() => setServerAwake(true), 800);
+      }
     }
   }, []);
 
@@ -188,7 +204,8 @@ const StoreContextProvider = ({ children }) => {
     setUserData,
     loadCartData,
     setCartItems,
-  }), [food_list, cartItems, addToCart, removeFromCart, getTotalCartAmount, token, userData, loadCartData]);
+    serverAwake,
+  }), [food_list, cartItems, addToCart, removeFromCart, getTotalCartAmount, token, userData, loadCartData, serverAwake]);
 
   return (
     <StoreContext.Provider value={contextValue}>

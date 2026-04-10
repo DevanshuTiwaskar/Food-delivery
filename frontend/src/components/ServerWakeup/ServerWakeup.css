@@ -1,0 +1,254 @@
+/* ===== Server Wakeup Overlay ===== */
+.server-wakeup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: wakeup-fadeIn 0.4s ease-out;
+}
+
+@keyframes wakeup-fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ===== Card ===== */
+.server-wakeup-card {
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 24px;
+  padding: 3rem 2.5rem;
+  max-width: 440px;
+  width: 90%;
+  text-align: center;
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.12),
+    0 8px 20px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  animation: wakeup-slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes wakeup-slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ===== Icon Container ===== */
+.wakeup-icon-container {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wakeup-icon {
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, #ff4630 0%, #ff7e67 100%);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  box-shadow: 0 8px 24px rgba(255, 70, 48, 0.3);
+  animation: wakeup-float 3s ease-in-out infinite;
+  z-index: 2;
+}
+
+@keyframes wakeup-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.wakeup-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 72px;
+  height: 72px;
+  border: 2px solid rgba(255, 70, 48, 0.4);
+  border-radius: 20px;
+  transform: translate(-50%, -50%);
+  animation: wakeup-pulseRing 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  z-index: 1;
+}
+
+.wakeup-pulse-delayed {
+  animation-delay: 0.6s;
+}
+
+@keyframes wakeup-pulseRing {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.8);
+    opacity: 0;
+  }
+}
+
+/* ===== Text ===== */
+.wakeup-text {
+  margin-bottom: 1.5rem;
+}
+
+.wakeup-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.3px;
+  min-height: 2em;
+}
+
+.wakeup-dots {
+  display: inline-block;
+  min-width: 20px;
+  text-align: left;
+}
+
+.wakeup-subtitle {
+  font-size: 0.88rem;
+  color: #666;
+  font-weight: 400;
+  line-height: 1.5;
+  animation: wakeup-subtitleFade 8s ease-in-out infinite;
+}
+
+@keyframes wakeup-subtitleFade {
+  0%, 10% { opacity: 0; transform: translateY(4px); }
+  15%, 85% { opacity: 1; transform: translateY(0); }
+  90%, 100% { opacity: 0; transform: translateY(-4px); }
+}
+
+/* ===== Progress Bar ===== */
+.wakeup-progress-track {
+  width: 100%;
+  height: 4px;
+  background: #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.wakeup-progress-bar {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #ff4630, #ff7e67, #ff4630);
+  background-size: 200% 100%;
+  border-radius: 10px;
+  animation: wakeup-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes wakeup-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ===== Elapsed Timer ===== */
+.wakeup-elapsed {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: #888;
+  font-weight: 500;
+  background: #f5f5f5;
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin-bottom: 1.2rem;
+}
+
+.wakeup-timer-icon {
+  font-size: 0.9rem;
+}
+
+/* ===== Tip ===== */
+.wakeup-tip {
+  font-size: 0.78rem;
+  color: #999;
+  line-height: 1.5;
+  padding: 0.8rem;
+  background: #fafafa;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+}
+
+/* ===== Background Glow ===== */
+.wakeup-bg-glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.glow-1 {
+  top: 10%;
+  right: 15%;
+  background: radial-gradient(circle, rgba(255, 70, 48, 0.3) 0%, transparent 70%);
+  animation: wakeup-glowMove 8s ease-in-out infinite;
+}
+
+.glow-2 {
+  bottom: 15%;
+  left: 10%;
+  background: radial-gradient(circle, rgba(255, 126, 103, 0.25) 0%, transparent 70%);
+  animation: wakeup-glowMove 10s ease-in-out reverse infinite;
+}
+
+@keyframes wakeup-glowMove {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(30px, -20px); }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+  .server-wakeup-card {
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+  }
+
+  .wakeup-title {
+    font-size: 1.2rem;
+  }
+
+  .wakeup-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .wakeup-pulse {
+    width: 60px;
+    height: 60px;
+  }
+
+  .wakeup-icon-container {
+    width: 76px;
+    height: 76px;
+  }
+}

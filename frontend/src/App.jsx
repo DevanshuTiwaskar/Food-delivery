@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,6 +15,8 @@ import LoginPopup from './components/LoginPopup/LoginPopup';
 import AdminAuthPopup from './components/AdminAuthPopup/AdminAuthPopup';
 import Navbar from './components/Navbar/Navbar';
 import Preloader from './components/Preloader/Preloader';
+import ServerWakeup from './components/ServerWakeup/ServerWakeup';
+import { StoreContext } from './Context/StoreContext';
 import Lenis from 'lenis';
 
 const App = () => {
@@ -22,6 +24,7 @@ const App = () => {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
+  const { serverAwake } = useContext(StoreContext);
 
   // Handle Preloader timing
   useEffect(() => {
@@ -89,6 +92,9 @@ const App = () => {
 
       {/* Modern Intro Preloader */}
       {loading && <Preloader />}
+
+      {/* Server Wakeup Overlay - shows when Render backend is cold-starting */}
+      {!loading && !serverAwake && <ServerWakeup />}
 
       {/* Popups */}
       {showLogin && <LoginPopup setShowLogin={setShowLogin} />}

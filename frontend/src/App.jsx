@@ -16,7 +16,7 @@ import AdminAuthPopup from './components/AdminAuthPopup/AdminAuthPopup';
 import Navbar from './components/Navbar/Navbar';
 import Preloader from './components/Preloader/Preloader';
 import ServerWakeup from './components/ServerWakeup/ServerWakeup';
-import { StoreContext } from './Context/StoreContext';
+import { StoreContext } from './context/StoreContext';
 import Lenis from 'lenis';
 
 const App = () => {
